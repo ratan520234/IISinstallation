@@ -3,7 +3,7 @@
   hosts: winservers
   gather_facts: no
   tasks:
-    - name: Install IIS (Web-Server only)
+    - name: Install IIS
       ansible.windows.win_feature:
         name: Web-Server
         state: present
