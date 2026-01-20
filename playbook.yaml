@@ -1,1 +1,26 @@
-
+---
+- name: Sample Linux ping playbook
+  hosts: winservers
+  gather_facts: no
+  tasks:
+    - name: Install IIS (Web-Server only)
+      ansible.windows.win_feature:
+        name: Web-Server
+        state: present
+        name: Web-Server
+        state: present
+        include_sub_features: true
+        include_management_tools: true
+      register: win_feature
+      
+    - name: Reboot if installing Web-Server feature requires it
+      ansible.windows.win_reboot:
+      when: win_feature.reboot_required
+      
+    - name: copy index file
+      ansible.windows.win_get_url:
+        url: http://localhost/sharesoft/new/index.html
+        dest: C:\inetpub\wwwroot\index.html
+    - name: Run a PowerShell script with -NoProfile
+      ansible.windows.win_shell: iisreset /restart
+      
